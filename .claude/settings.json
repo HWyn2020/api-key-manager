@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(///wsl.localhost/Ubuntu-22.04/home/henry/workspace/api-key-manager/tests/**)",
+      "Read(///wsl.localhost/Ubuntu-22.04/home/henry/workspace/api-key-manager/**)",
+      "Bash(wsl -d Ubuntu-22.04 -- bash -c 'cd /home/henry/workspace/api-key-manager && git remote -v 2>&1')",
+      "Bash(wsl -d Ubuntu-22.04 -- bash -c 'cd /home/henry/workspace/api-key-manager && git remote add origin https://github.com/HWyn2020/api-key-manager.git 2>&1 && git remote -v 2>&1')",
+      "Bash(wsl -d Ubuntu-22.04 -- bash -c 'cd /home/henry/workspace/api-key-manager && git status -s 2>&1')",
+      "Bash(wsl -d Ubuntu-22.04 -- bash -c 'cd /home/henry/workspace/api-key-manager && git diff --stat HEAD 2>&1')"
+    ],
+    "additionalDirectories": [
+      "\\\\wsl.localhost\\Ubuntu-22.04\\home\\henry\\workspace\\api-key-manager\\tests",
+      "\\home\\henry\\workspace\\api-key-manager\\tests\\security",
+      "\\\\wsl.localhost\\Ubuntu-22.04\\home\\henry\\workspace\\api-key-manager\\tests\\security"
+    ]
+  }
+}
