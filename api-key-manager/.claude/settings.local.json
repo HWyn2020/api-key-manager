@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wsl -d Ubuntu-22.04 bash -c \"cd /home/henry/workspace/api-key-manager && npx tsc --noEmit 2>&1\")",
+      "Bash(wsl -d Ubuntu-22.04 bash -c \"node --version && which node && ls /home/henry/.nvm/versions/node/ 2>/dev/null || echo ''no nvm''\")",
+      "Bash(wsl -d Ubuntu-22.04 bash -lc \"cd /home/henry/workspace/api-key-manager && nvm use 22 && npx tsc --noEmit 2>&1\")",
+      "Bash(wsl -d Ubuntu-22.04 bash -c \"export NVM_DIR=\"\"$HOME/.nvm\"\" && [ -s \"\"$NVM_DIR/nvm.sh\"\" ] && . \"\"$NVM_DIR/nvm.sh\"\" && nvm use 22 && cd /home/henry/workspace/api-key-manager && npx tsc --noEmit 2>&1\")",
+      "Bash(wsl -d Ubuntu-22.04 bash -c \"export NVM_DIR=\"\"$HOME/.nvm\"\" && [ -s \"\"$NVM_DIR/nvm.sh\"\" ] && . \"\"$NVM_DIR/nvm.sh\"\" && nvm use 22 2>&1 && cd /home/henry/workspace/api-key-manager && npx tsc --noEmit 2>&1; echo EXIT:$?\")",
+      "Bash(wsl -d Ubuntu-22.04 bash -c 'export NVM_DIR=\"\"$HOME/.nvm\"\" && [ -s \"\"$NVM_DIR/nvm.sh\"\" ] && . \"\"$NVM_DIR/nvm.sh\"\" && nvm use 22 && cd /home/henry/workspace/api-key-manager && npx tsc --noEmit')",
+      "Bash(wsl -d Ubuntu-22.04 -- bash -c 'export NVM_DIR=\"\"$HOME/.nvm\"\"; [ -s \"\"$NVM_DIR/nvm.sh\"\" ] && . \"\"$NVM_DIR/nvm.sh\"\"; nvm use 22 >/dev/null 2>&1; cd /home/henry/workspace/api-key-manager; npx tsc --noEmit 2>&1; echo \"\"EXIT:$?\"\"')",
+      "Bash(wsl -d Ubuntu-22.04 -- bash -c 'export PATH=\"\"/home/henry/.nvm/versions/node/v22.21.1/bin:$PATH\"\"; node --version; cd /home/henry/workspace/api-key-manager; npx tsc --noEmit 2>&1; echo \"\"EXIT:$?\"\"')",
+      "Bash(wsl -d Ubuntu-22.04 -- bash -c 'export PATH=\"\"/home/henry/.nvm/versions/node/v22.21.1/bin:$PATH\"\"; cd /home/henry/workspace/api-key-manager; npx tsc --noEmit 2>&1; echo \"\"EXIT:$?\"\"')",
+      "Bash(npx --yes tsc --noEmit --esModuleInterop --resolveJsonModule --moduleResolution node --target ES2020 --module commonjs --strict src/utils/response.ts src/utils/validator.ts)",
+      "Bash(wsl -d Ubuntu-22.04 -e bash -c \"cd /home/henry/workspace/api-key-manager && npx tsc --noEmit src/middleware/errorHandler.ts src/middleware/requestLogger.ts src/middleware/rateLimitMiddleware.ts src/middleware/index.ts 2>&1\")"
+    ]
+  }
+}
