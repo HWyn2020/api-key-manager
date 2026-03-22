@@ -34,6 +34,25 @@ npm run dev
 curl http://localhost:3000/api/health
 ```
 
+## Web Dashboard
+
+A built-in admin dashboard is served at `http://localhost:3000` when the server is running.
+
+**First-time setup** — create an admin key via CLI, then use it to log in:
+
+```bash
+npx tsx src/cli/index.ts create admin "Admin Key" read write admin
+# Copy the plaintext key (hg_...) and use it to log in at http://localhost:3000
+```
+
+**Dashboard features:**
+- **Overview** — Stats cards showing total, active, revoked keys and audit event count
+- **API Keys** — Create, rotate, and revoke keys with modals; view key details and audit history
+- **Audit Logs** — Filterable table with action, date range, and key ID filters; expandable metadata
+- **Auth** — Secure login with API key (stored in sessionStorage, clears on tab close)
+
+> **WSL2 note:** If `localhost:3000` doesn't load in your browser, run the server from an interactive WSL terminal, or add `networkingMode=mirrored` to `C:\Users\<you>\.wslconfig` and restart WSL.
+
 ## API Endpoints
 
 | Method | Endpoint | Description |
