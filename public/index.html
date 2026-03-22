@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Key Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- ==================== AUTH SCREEN ==================== -->
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <div class="logo-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+        </svg>
+      </div>
+      <h1>API Key Manager</h1>
+      <p class="auth-subtitle">Authenticate to manage your API keys</p>
+      <form id="auth-form">
+        <div class="input-group">
+          <label for="auth-key-input">API Key</label>
+          <input type="password" id="auth-key-input" placeholder="Enter your API key" autocomplete="off" required>
+          <button type="button" class="toggle-password" data-target="auth-key-input" aria-label="Toggle key visibility">Show</button>
+        </div>
+        <div id="auth-error" class="auth-error"></div>
+        <button type="submit" class="btn btn-primary btn-block" id="auth-submit-btn">
+          Authenticate
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <div id="dashboard" class="dashboard hidden">
+
+    <!-- Top Nav -->
+    <nav class="top-nav">
+      <div class="nav-left">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+        </svg>
+        <span>API Key Manager</span>
+      </div>
+      <div class="nav-right">
+        <div class="status-indicator">
+          <span id="status-dot" class="status-dot"></span>
+          <span id="status-text">Connected</span>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+      </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul class="sidebar-nav">
+        <li>
+          <a href="#" data-view="overview" class="active">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="#" data-view="keys">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+            </svg>
+            API Keys
+          </a>
+        </li>
+        <li>
+          <a href="#" data-view="audit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            Audit Logs
+          </a>
+        </li>
+        <li>
+          <a href="#" data-view="settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            Settings
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- ===== Overview View ===== -->
+      <div id="view-overview" class="view active">
+        <div class="view-header">
+          <h2>Dashboard</h2>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Keys</div>
+            <div class="stat-value accent" id="stat-total">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Active Keys</div>
+            <div class="stat-value success" id="stat-active">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Revoked Keys</div>
+            <div class="stat-value danger" id="stat-revoked">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Audit Events</div>
+            <div class="stat-value info" id="stat-audit">-</div>
+          </div>
+        </div>
+
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:14px;">Recent Activity</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>Key ID</th>
+                <th>Actor</th>
+                <th>IP Address</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="recent-activity-body">
+              <tr><td colspan="5" class="empty-state"><p>Loading...</p></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== API Keys View ===== -->
+      <div id="view-keys" class="view">
+        <div class="view-header">
+          <h2>API Keys</h2>
+          <button class="btn btn-primary" id="btn-create-key">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Create New Key
+          </button>
+        </div>
+
+        <!-- Key reveal alert (shown after create/rotate) -->
+        <div id="key-reveal" class="key-reveal hidden">
+          <div class="key-reveal-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            New API Key Created
+          </div>
+          <div class="key-reveal-value">
+            <code id="key-reveal-text"></code>
+            <button class="btn-copy" id="btn-copy-key" title="Copy to clipboard">Copy</button>
+          </div>
+          <div class="key-reveal-warning">This key will not be shown again. Copy it now and store it securely.</div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Key Prefix</th>
+                <th>Status</th>
+                <th>Scopes</th>
+                <th>Created</th>
+                <th>Expires</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="keys-table-body">
+              <tr><td colspan="7" class="empty-state"><p>Loading...</p></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== Audit Logs View ===== -->
+      <div id="view-audit" class="view">
+        <div class="view-header">
+          <h2>Audit Logs</h2>
+        </div>
+
+        <div class="filter-bar">
+          <div class="input-group">
+            <label for="filter-key-id">Key ID</label>
+            <input type="text" id="filter-key-id" placeholder="Filter by Key ID">
+          </div>
+          <div class="input-group">
+            <label for="filter-action">Action</label>
+            <select id="filter-action">
+              <option value="">All Actions</option>
+              <option value="key.created">key.created</option>
+              <option value="key.validated">key.validated</option>
+              <option value="key.revoked">key.revoked</option>
+              <option value="key.rotated">key.rotated</option>
+              <option value="key.expired">key.expired</option>
+              <option value="key.deleted">key.deleted</option>
+              <option value="key.updated">key.updated</option>
+              <option value="key.accessed">key.accessed</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="filter-start-date">Start Date</label>
+            <input type="date" id="filter-start-date">
+          </div>
+          <div class="input-group">
+            <label for="filter-end-date">End Date</label>
+            <input type="date" id="filter-end-date">
+          </div>
+          <button class="btn btn-primary btn-sm" id="btn-apply-filters">Apply</button>
+          <button class="btn btn-ghost btn-sm" id="btn-clear-filters">Clear</button>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Key ID</th>
+                <th>Action</th>
+                <th>Actor</th>
+                <th>IP Address</th>
+                <th>Timestamp</th>
+                <th>Metadata</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table-body">
+              <tr><td colspan="7" class="empty-state"><p>Loading...</p></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <div class="page-info">
+            <span id="audit-page-info">-</span>
+          </div>
+          <div class="page-buttons">
+            <button class="btn btn-ghost btn-sm" id="audit-prev-btn" disabled>Previous</button>
+            <button class="btn btn-ghost btn-sm" id="audit-next-btn" disabled>Next</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Settings View (placeholder) ===== -->
+      <div id="view-settings" class="view">
+        <div class="view-header">
+          <h2>Settings</h2>
+        </div>
+        <div class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <p>Settings coming soon.</p>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ===== Key Detail Panel (slide-out) ===== -->
+    <div id="key-detail-panel" class="detail-panel">
+      <div class="panel-header">
+        <h3>Key Details</h3>
+        <button class="btn-icon" id="close-detail-panel" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div id="key-detail-content">
+        <!-- Populated by JS -->
+      </div>
+      <div class="detail-section-title">Audit History</div>
+      <div id="key-detail-audit">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+  </div><!-- /dashboard -->
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Create Key Modal -->
+  <div id="modal-create-key" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Create New API Key</h3>
+        <button class="btn-icon modal-close-btn" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <form id="form-create-key">
+        <div class="modal-body">
+          <div class="input-group">
+            <label for="create-key-name">Key Name *</label>
+            <input type="text" id="create-key-name" placeholder="e.g. Production API" required>
+          </div>
+          <div class="input-group">
+            <label for="create-key-scopes">Scopes</label>
+            <input type="text" id="create-key-scopes" placeholder="read, write, admin">
+            <div class="form-hint">Comma-separated list of scopes</div>
+          </div>
+          <div class="input-group">
+            <label for="create-key-expires">Expires In (hours)</label>
+            <input type="number" id="create-key-expires" placeholder="Optional (e.g. 720)" min="1">
+            <div class="form-hint">Leave empty for no expiration</div>
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label for="create-key-rl-window">Rate Limit Window (ms)</label>
+              <input type="number" id="create-key-rl-window" placeholder="e.g. 60000" min="1">
+            </div>
+            <div class="input-group">
+              <label for="create-key-rl-max">Max Requests</label>
+              <input type="number" id="create-key-rl-max" placeholder="e.g. 100" min="1">
+            </div>
+          </div>
+          <div class="form-hint">Both rate limit fields are optional. If one is set, both must be provided.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost modal-close-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="create-key-submit">Create Key</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Rotate Key Modal -->
+  <div id="modal-rotate-key" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Rotate API Key</h3>
+        <button class="btn-icon modal-close-btn" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <form id="form-rotate-key">
+        <input type="hidden" id="rotate-key-id">
+        <div class="modal-body">
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:16px;">
+            Rotating a key will generate a new key and invalidate the old one. The old key can remain valid during an optional grace period.
+          </p>
+          <div class="input-group">
+            <label for="rotate-reason">Reason *</label>
+            <input type="text" id="rotate-reason" placeholder="e.g. Scheduled rotation" required>
+          </div>
+          <div class="input-group">
+            <label for="rotate-grace-period">Grace Period (ms)</label>
+            <input type="number" id="rotate-grace-period" placeholder="Optional (e.g. 3600000 for 1 hour)" min="0">
+            <div class="form-hint">Time the old key remains valid after rotation</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost modal-close-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="rotate-key-submit">Rotate Key</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Revoke Key Modal -->
+  <div id="modal-revoke-key" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Revoke API Key</h3>
+        <button class="btn-icon modal-close-btn" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <form id="form-revoke-key">
+        <input type="hidden" id="revoke-key-id">
+        <div class="modal-body">
+          <p style="font-size:0.875rem;color:var(--danger);margin-bottom:16px;font-weight:500;">
+            This action is permanent. The key will be immediately invalidated and cannot be restored.
+          </p>
+          <div class="input-group">
+            <label for="revoke-reason">Reason *</label>
+            <input type="text" id="revoke-reason" placeholder="e.g. Compromised key" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost modal-close-btn">Cancel</button>
+          <button type="submit" class="btn btn-danger" id="revoke-key-submit">Revoke Key</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
