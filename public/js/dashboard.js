@@ -19,6 +19,8 @@
   // ──────────────────────────────────────────────
   // 2. API Client
   // ──────────────────────────────────────────────
+  var API_BASE = window.location.port === '5500' ? 'http://localhost:3000/api' : '/api';
+
   async function api(method, path, body) {
     var headers = { 'Content-Type': 'application/json' };
     if (state.apiKey) {
@@ -28,7 +30,7 @@
     if (body) {
       opts.body = JSON.stringify(body);
     }
-    var res = await fetch('/api' + path, opts);
+    var res = await fetch(API_BASE + path, opts);
     var data = await res.json();
     if (!res.ok) {
       var err = new Error(data.error ? data.error.message : 'Request failed');

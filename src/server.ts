@@ -21,7 +21,7 @@ export function createServer(config?: AppConfig): {
   }
 
   // Static files (dashboard)
-  app.use(express.static(path.join(__dirname, '..', 'public')));
+  app.use(express.static(path.join(process.cwd(), 'public')));
 
   // Body parsing
   app.use(express.json({ limit: '100kb' }));
@@ -40,16 +40,26 @@ export function createServer(config?: AppConfig): {
     next();
   });
 
-  // CORS: deny cross-origin requests
+  // CORS: allow dashboard dev server, deny other origins
+  const ALLOWED_ORIGINS = ['http://127.0.0.1:5500', 'http://localhost:5500'];
   app.use((req, res, next) => {
     const origin = req.headers.origin;
     if (origin) {
-      // Cross-origin request — block it
-      res.status(403).json({
-        success: false,
-        error: { code: 'FORBIDDEN', message: 'Cross-origin requests are not allowed' },
-      });
-      return;
+      if (ALLOWED_ORIGINS.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        if (req.method === 'OPTIONS') {
+          res.status(204).end();
+          return;
+        }
+      } else {
+        res.status(403).json({
+          success: false,
+          error: { code: 'FORBIDDEN', message: 'Cross-origin requests are not allowed' },
+        });
+        return;
+      }
     }
     next();
   });
@@ -79,7 +89,7 @@ export function createServer(config?: AppConfig): {
   // SPA fallback — serve index.html for non-API routes
   app.get('*', (req, res) => {
     if (!req.path.startsWith('/api')) {
-      res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+      res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
     }
   });
 
@@ -87,7 +97,7 @@ export function createServer(config?: AppConfig): {
   app.use(errorHandler);
 
   function start(): void {
-    const httpServer = app.listen(cfg.port, () => {
+    const httpServer = app.listen(cfg.port, '0.0.0.0', () => {
       console.log(`API Key Manager running on port ${cfg.port} [${cfg.nodeEnv}]`);
     });
 
