@@ -1,3 +1,4 @@
+import path from 'node:path';
 import express, { Express } from 'express';
 import { loadConfig, AppConfig } from './config';
 import { initializeDatabase } from './database';
@@ -19,30 +20,46 @@ export function createServer(config?: AppConfig): {
     app.set('trust proxy', true);
   }
 
+  // Static files (dashboard)
+  app.use(express.static(path.join(process.cwd(), 'public')));
+
   // Body parsing
   app.use(express.json({ limit: '100kb' }));
 
   // Security headers
-  app.use((_req, res, next) => {
+  app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('X-XSS-Protection', '0');
     res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-    res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('Content-Security-Policy', "default-src 'none'");
+    res.setHeader('Content-Security-Policy', "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; img-src 'self' data:; connect-src 'self'");
+    // Only set no-store for API responses, allow caching for static assets
+    if (req.path.startsWith('/api')) {
+      res.setHeader('Cache-Control', 'no-store');
+    }
     next();
   });
 
-  // CORS: deny cross-origin requests
+  // CORS: allow dashboard dev server, deny other origins
+  const ALLOWED_ORIGINS = ['http://127.0.0.1:5500', 'http://localhost:5500'];
   app.use((req, res, next) => {
     const origin = req.headers.origin;
     if (origin) {
-      // Cross-origin request — block it
-      res.status(403).json({
-        success: false,
-        error: { code: 'FORBIDDEN', message: 'Cross-origin requests are not allowed' },
-      });
-      return;
+      if (ALLOWED_ORIGINS.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        if (req.method === 'OPTIONS') {
+          res.status(204).end();
+          return;
+        }
+      } else {
+        res.status(403).json({
+          success: false,
+          error: { code: 'FORBIDDEN', message: 'Cross-origin requests are not allowed' },
+        });
+        return;
+      }
     }
     next();
   });
@@ -69,11 +86,18 @@ export function createServer(config?: AppConfig): {
   // Routes
   app.use('/api', createRouter({ keyService, auditService }));
 
+  // SPA fallback — serve index.html for non-API routes
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
+    }
+  });
+
   // Error handler (must be last)
   app.use(errorHandler);
 
   function start(): void {
-    const httpServer = app.listen(cfg.port, () => {
+    const httpServer = app.listen(cfg.port, '0.0.0.0', () => {
       console.log(`API Key Manager running on port ${cfg.port} [${cfg.nodeEnv}]`);
     });
 

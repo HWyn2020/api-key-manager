@@ -1,13 +1,10 @@
 {
   "permissions": {
-    "additionalDirectories": [
-      "\\\\wsl.localhost\\Ubuntu-22.04\\home\\henry\\workspace\\api-key-manager\\tests",
-      "\\home\\henry\\workspace\\api-key-manager\\tests\\security",
-      "\\\\wsl.localhost\\Ubuntu-22.04\\home\\henry\\workspace\\api-key-manager\\tests\\security"
-    ],
     "allow": [
-      "Read(///wsl.localhost/Ubuntu-22.04/home/henry/workspace/api-key-manager/tests/**)",
-      "Read(///wsl.localhost/Ubuntu-22.04/home/henry/workspace/api-key-manager/**)"
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)"
     ]
   }
 }
